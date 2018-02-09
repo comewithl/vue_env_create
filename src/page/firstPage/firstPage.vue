@@ -6,6 +6,7 @@
       <div>
         <span >数字监控：{{timeLevelTen}}</span>
         <el-button type="primary" @click="addTime">Add</el-button>
+        <my-checkbox></my-checkbox>
       </div>
     </div>
 </template>
@@ -14,6 +15,7 @@
 	 * Created by hjunx on 2017/11/13.
 	 */
 	import mixinExa from "../../assets/mixinExa"
+  import myCheckbox from "../../components/testModelComp.vue"
 	export default {
 	  mixins:[mixinExa],
     /**
@@ -60,7 +62,7 @@
           next(false)
         }
       },
-	    components: {},
+	    components: {myCheckbox},
 		  mounted(){
         console.log("paranetMounted")
 		  },

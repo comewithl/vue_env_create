@@ -4,7 +4,8 @@
  * 2.对应钩子（生命周期）会在所混入实例前调用，注意vue生命周期对应产生的内容
  * 3.可以将通用的实例销毁都放入这个组件中。
  * 4.临时处理代码可以利用混入，避免代码污染
- *
+ * 5.通用的方法调用也可以利用混入注册方法都各个组件实例中
+ * 6.若混入的方法与组件实例的方法重名，混入的方法将不起作用 this.addTime
  */
 export default{
   mounted(){
@@ -15,12 +16,12 @@ export default{
     addTimeMix(){
       this.time = 110
     },
+    addTime(){
+      this.time+=2
+    }
   },
-  /**
-   * 由于是混入组件中，函数不要使用绑定当前作用域()=>的写法
-   */
   computed:{
-   timeLevelTen:function(){
+   timeLevelTen(){
      return this.time*10
    }
   }

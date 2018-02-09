@@ -33,6 +33,12 @@ Vue.filter('filterChinese', function (value) {
 new Vue({
   el: '#app',
   router,
-  template: '<App/>',
+  // template: '<App/>',
+  render(h){
+    return h(App)
+  },
+  renderError(h,err){
+    return h('pre',{style:{color:'red'}},err.stack)
+  },
   components: { App },
 })
