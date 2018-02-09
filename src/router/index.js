@@ -10,10 +10,14 @@ export default new Router({
     {
       path: '/',
       name: 'HelloWorld',
-      component: HelloWorld
+      component: HelloWorld,
+      beforeEnter:(to,from,next)=>{
+        console.log('beforeEnter',this)
+        next()
+      }
     },
     {
-      path: '/first',
+      path: '/first/:id',
       name: 'first',
       component: firstPage
     }

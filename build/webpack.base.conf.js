@@ -3,6 +3,7 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const webpack = require('webpack')
 
 function resolve (dir) {
@@ -26,6 +27,7 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
+      '~': resolve(__dirname, 'node_modules'),
     }
   },
   plugins: [
@@ -35,7 +37,7 @@ module.exports = {
       jQuery:"jquery",
       jquery:"jquery",
       "window.jQuery":"jquery"
-    })
+    }),
   ],
   module: {
     rules: [
@@ -82,6 +84,20 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
+      },
+      {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader', 'postcss-loader']
+        })
+      },
+      {
+        test: /\.less$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader', 'postcss-loader', 'less-loader']
+        })
       }
     ]
   }
