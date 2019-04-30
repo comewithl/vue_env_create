@@ -2,11 +2,12 @@
 const utils = require('./utils')
 const webpack = require('webpack')
 const config = require('../config')
+const path = require('path')
 const merge = require('webpack-merge')
 const baseWebpackConfig = require('./webpack.base.conf')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const portfinder = require('portfinder')
 
 const devWebpackConfig = merge(baseWebpackConfig, {
@@ -18,21 +19,24 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 
   // these devServer options should be customized in /config/index.js
   devServer: {
-    historyApiFallback: true,
-    hot: true,
-    host: process.env.HOST || config.dev.host,
-    port: process.env.PORT || config.dev.port,
-    open: config.dev.autoOpenBrowser,
-    overlay: config.dev.errorOverlay ? {
-      warnings: false,
-      errors: true,
-    } : false,
-    publicPath: config.dev.assetsPublicPath,
-    proxy: config.dev.proxyTable,
-    quiet: true, // necessary for FriendlyErrorsPlugin
-    watchOptions: {
-      poll: config.dev.poll,
-    }
+    contentBase: path.join(__dirname, 'dist'),
+    compress: true,
+    port: 9000
+    // historyApiFallback: true,
+    // hot: true,
+    // host: process.env.HOST || config.dev.host,
+    // port: process.env.PORT || config.dev.port,
+    // open: config.dev.autoOpenBrowser,
+    // overlay: config.dev.errorOverlay ? {
+    //   warnings: false,
+    //   errors: true,
+    // } : false,
+    // publicPath: config.dev.assetsPublicPath,
+    // proxy: config.dev.proxyTable,
+    // quiet: true, // necessary for FriendlyErrorsPlugin
+    // watchOptions: {
+    //   poll: config.dev.poll,
+    // }
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -48,9 +52,10 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       inject: true
     }),
     new FriendlyErrorsPlugin(),
-    new ExtractTextPlugin({
+    new MiniCssExtractPlugin({
       filename:'./css/[name].css',
-      allChunks: true
+      // chunkFilename: './css/[id].css' // chunk文件
+      // allChunks: true
     })
   ]
 })
