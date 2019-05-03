@@ -2,18 +2,22 @@
 const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
-const vueLoaderConfig = require('./vue-loader.conf')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const webpack = require('webpack')
+const getEntries = require('./webpack.entries')
+// const vueLoaderConfig  = require('./vue-loader.conf')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-function resolve (dir) {
+function resolve(dir){
   return path.join(__dirname, '..', dir)
 }
 
+const { entry, plugins } = getEntries()
+
 module.exports = {
   context: path.resolve(__dirname, '../'),
+  // 多页面入口
   entry: {
-    app: './src/main.js'
+    app: './src/main.js',
+    ...entry
   },
   output: {
     path: config.build.assetsRoot,
@@ -27,20 +31,18 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
-      '~': resolve(__dirname, 'node_modules'),
+      '~': resolve(__dirname, 'node_modules')
     }
   },
   plugins: [
-    //全局引入jquery
-    new webpack.ProvidePlugin({
-      $:"jquery",
-      jQuery:"jquery",
-      jquery:"jquery",
-      "window.jQuery":"jquery"
-    }),
-  ],
+    new MiniCssExtractPlugin({
+      filename: utils.assetsPath('css/[name].[contenthash].css'),
+      chunkFilename: utils.assetsPath('css/[name].[contenthash:10].css')
+    })
+  ].concat(plugins),
   module: {
     rules: [
+      // todo: eslint检查机制，等都OK了再来整
       // ...(config.dev.useEslint? [{
       //   test: /\.(js|vue)$/,
       //   loader: 'eslint-loader',
@@ -53,13 +55,22 @@ module.exports = {
       // }] : []),
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
-        options: vueLoaderConfig
+        loader: 'vue-loader'
+        // options: vueLoaderConfig
       },
       {
         test: /\.js$/,
         loader: 'babel-loader',
         include: [resolve('src'), resolve('test')]
+      },
+      {
+        test: /\.pug$/,
+        use: [{
+          loader: 'pug-loader',
+          options: {
+            pretty: process.env.NODE_ENV == 'development'
+          }
+        }]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -86,18 +97,37 @@ module.exports = {
         }
       },
       {
-        test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['css-loader', 'postcss-loader']
-        })
+        test: /\.less$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader
+            // options:{
+            //   // hmr: process.env.NODE_ENV == 'development'
+            // }
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              minimize: false
+            }
+          },
+          'postcss-loader',
+          'less-loader'
+        ]
       },
       {
-        test: /\.less$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['css-loader', 'postcss-loader', 'less-loader']
-        })
+        test: /\.css$/,
+        use: [
+          // 'style-loader',
+          { loader: MiniCssExtractPlugin.loader },
+          {
+            loader: 'css-loader',
+            options: {
+              minimize: false
+            }
+          },
+          'postcss-loader'
+        ]
       }
     ]
   }
