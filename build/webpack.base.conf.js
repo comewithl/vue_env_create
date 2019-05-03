@@ -6,11 +6,13 @@ const getEntries = require('./webpack.entries')
 // const vueLoaderConfig  = require('./vue-loader.conf')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-function resolve(dir){
-  return path.join(__dirname, '..', dir)
+function resolve(dir) {
+  return path.join(__dirname, '../', dir)
 }
 
-const { entry, plugins } = getEntries()
+const {entry, plugins} = getEntries()
+
+const isDev = process.env.NODE_ENV == 'development'
 
 module.exports = {
   context: path.resolve(__dirname, '../'),
@@ -30,7 +32,8 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src'),
+      '@store': path.resolve('src/store'),
+      '@': resolve(__dirname, 'src'),
       '~': resolve(__dirname, 'node_modules')
     }
   },
@@ -42,17 +45,16 @@ module.exports = {
   ].concat(plugins),
   module: {
     rules: [
-      // todo: eslint检查机制，等都OK了再来整
-      // ...(config.dev.useEslint? [{
-      //   test: /\.(js|vue)$/,
-      //   loader: 'eslint-loader',
-      //   enforce: 'pre',
-      //   include: [resolve('src'), resolve('test')],
-      //   options: {
-      //     formatter: require('eslint-friendly-formatter'),
-      //     emitWarning: !config.dev.showEslintErrorsInOverlay
-      //   }
-      // }] : []),
+      ...(isDev ? [{
+        test: /\.(js|vue)$/,
+        loader: 'eslint-loader',
+        enforce: 'pre',
+        include: [resolve('src'), resolve('test')],
+        options: {
+          formatter: require('eslint-friendly-formatter'),
+          quiet: true
+        }
+      }] : []),
       {
         test: /\.vue$/,
         loader: 'vue-loader'
@@ -100,10 +102,10 @@ module.exports = {
         test: /\.less$/,
         use: [
           {
-            loader: MiniCssExtractPlugin.loader
-            // options:{
-            //   // hmr: process.env.NODE_ENV == 'development'
-            // }
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              hmr: process.env.NODE_ENV == 'development'
+            }
           },
           {
             loader: 'css-loader',
@@ -119,7 +121,7 @@ module.exports = {
         test: /\.css$/,
         use: [
           // 'style-loader',
-          { loader: MiniCssExtractPlugin.loader },
+          {loader: MiniCssExtractPlugin.loader},
           {
             loader: 'css-loader',
             options: {

@@ -1,14 +1,14 @@
 <style lang="less" type="text/less">
-	@import "./test.less";
+  @import "./test.less";
 
-	.operaTable {
-		height: 100%;
-	}
+  .operaTable {
+    height: 100%;
+  }
 </style>
 <template>
-	<div class="manaTable">
-		test
-	</div>
+  <div class="manaTable">
+    test
+  </div>
 </template>
 <script>
   /**
@@ -16,11 +16,11 @@
    */
 
   export default {
-    name: 'opraDetailTable',
-    data(){
+    name: 'test',
+    data() {
       return {}
     },
-    mounted(){
+    mounted() {
     },
     methods: {}
   }

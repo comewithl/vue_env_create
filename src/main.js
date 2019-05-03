@@ -13,18 +13,18 @@ Vue.use(ElementUIPlugin)
 // import $ from 'jquery'
 Vue.config.productionTip = false
 router.beforeEach((to, from, next) => {
-  console.log('beforeEach', this)
+  // console.log('beforeEach', this)
   next()
 })
 router.beforeResolve((to, from, next) => {
-  console.log('beforeResolve', this)
+  // console.log('beforeResolve', this)
   next()
 })
 
 Vue.filter('filterChinese', function (value) {
   if (!value) return ''
   value = value.replace(/[^\u4e00-\u9fa5]+/ig, '')
-  console.log(value)
+  // console.log(value)
   return value
 })
 
