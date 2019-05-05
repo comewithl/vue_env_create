@@ -4,6 +4,10 @@ const config = require('../config')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const pkg = require('../package.json')
 
+exports.resolve = function(dir){
+  return path.resolve(__dirname, '../', dir);
+}
+
 exports.assetsPath = function (_path) {
   const assetsSubDirectory = process.env.NODE_ENV === 'production'
     ? config.build.assetsSubDirectory

@@ -1,7 +1,7 @@
 import Vue from 'vue'
-import App from './refundManage.vue'
 import VueRouter from 'vue-router'
 import store from '@store/index'
+import App from './refundManage.vue'
 
 const router = new VueRouter({
   routes: [

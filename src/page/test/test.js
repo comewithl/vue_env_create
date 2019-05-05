@@ -5,7 +5,7 @@ import store from '@store'
 new Vue({
   el: '#app',
   store,
-  render(h) {
+  render (h){
     return h(App)
   }
 })

@@ -1,16 +1,19 @@
 'use strict'
-const utils = require('./utils')
 const webpack = require('webpack')
-const config = require('../config')
 const path = require('path')
+const chokidar = require('chokidar');
+const fs = require('fs');
 const merge = require('webpack-merge')
-const baseWebpackConfig = require('./webpack.base.conf')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const mockerAPI = require('mocker-api');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const portfinder = require('portfinder')
+const baseWebpackConfig = require('./webpack.base.conf')
+const config = require('../config')
+const {createNotifierCallback, resolve} = require('./utils')
 
 const devWebpackConfig = merge(baseWebpackConfig, {
+  mode: 'development',
   module: {
     // rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
   },
@@ -21,22 +24,35 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     compress: true,
-    port: 9000
+    port: 9000,
     // historyApiFallback: true,
     // hot: true,
     // host: process.env.HOST || config.dev.host,
     // port: process.env.PORT || config.dev.port,
     // open: config.dev.autoOpenBrowser,
-    // overlay: config.dev.errorOverlay ? {
-    //   warnings: false,
-    //   errors: true,
-    // } : false,
+    // show Error in Browser
+    overlay: config.dev.errorOverlay ? {
+      warnings: false,
+      errors: true,
+    } : false,
     // publicPath: config.dev.assetsPublicPath,
     // proxy: config.dev.proxyTable,
-    // quiet: true, // necessary for FriendlyErrorsPlugin
-    // watchOptions: {
-    //   poll: config.dev.poll,
-    // }
+    after(app) {
+      const mockPath = resolve('mock');
+      const mock = () => {
+        const mocks = [];
+        const files = fs.readdirSync(mockPath);
+        files.forEach(file => {
+          const filePath = path.resolve(mockPath, file);
+          mocks.push(filePath);
+        });
+        mockerAPI(app, mocks);
+      };
+
+      const watcher = chokidar.watch(mockPath, { persistent: true });
+      watcher.on('add', mock).on('unlink', mock);
+      mock();
+    }
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -44,13 +60,13 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
-    new webpack.NoEmitOnErrorsPlugin(),
+    // new webpack.NoEmitOnErrorsPlugin(),
     // https://github.com/ampedandwired/html-webpack-plugin
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'index.html',
-      inject: true
-    }),
+    // new HtmlWebpackPlugin({
+    //   filename: 'index.html',
+    //   template: 'index.html',
+    //   inject: true
+    // }),
     new FriendlyErrorsPlugin(),
     new MiniCssExtractPlugin({
       filename:'./css/[name].css',
@@ -77,7 +93,7 @@ module.exports = new Promise((resolve, reject) => {
           messages: [`Your application is running here: http://${config.dev.host}:${port}`],
         },
         onErrors: config.dev.notifyOnErrors
-        ? utils.createNotifierCallback()
+        ? createNotifierCallback()
         : undefined
       }))
 

@@ -1,18 +1,18 @@
 'use strict'
 const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const utils = require('./utils')
 const config = require('../config')
 const getEntries = require('./webpack.entries')
-// const vueLoaderConfig  = require('./vue-loader.conf')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-function resolve(dir) {
+function resolve(dir){
   return path.join(__dirname, '../', dir)
 }
 
-const {entry, plugins} = getEntries()
+const { entry, plugins } = getEntries()
 
-const isDev = process.env.NODE_ENV == 'development'
+const isDev = process.env.NODE_ENV === 'development'
 
 module.exports = {
   context: path.resolve(__dirname, '../'),
@@ -33,6 +33,8 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@store': path.resolve('src/store'),
+      '@components': path.resolve('src/components'),
+      '@constants': path.resolve('src/constants'),
       '@': resolve(__dirname, 'src'),
       '~': resolve(__dirname, 'node_modules')
     }
@@ -41,7 +43,14 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: utils.assetsPath('css/[name].[contenthash].css'),
       chunkFilename: utils.assetsPath('css/[name].[contenthash:10].css')
-    })
+    }),
+    new HtmlWebpackPlugin({
+      template: config.dev.htmlTemplate.index,
+      filename: config.dev.htmlFileName.index,
+      chunks: ['app'],
+      inject: true,
+      chunksSortMode: 'dependency'
+    }),
   ].concat(plugins),
   module: {
     rules: [
@@ -70,7 +79,7 @@ module.exports = {
         use: [{
           loader: 'pug-loader',
           options: {
-            pretty: process.env.NODE_ENV == 'development'
+            pretty: process.env.NODE_ENV === 'development'
           }
         }]
       },
@@ -121,7 +130,7 @@ module.exports = {
         test: /\.css$/,
         use: [
           // 'style-loader',
-          {loader: MiniCssExtractPlugin.loader},
+          { loader: MiniCssExtractPlugin.loader },
           {
             loader: 'css-loader',
             options: {

@@ -9,7 +9,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 
-const Env = process.env.NODE_ENV === 'testing'
+const Env = process.env.NODE_ENV === 'development'
   ? require('../config/test.env')
   : require('../config/prod.env')
 
@@ -76,7 +76,7 @@ module.exports = merge(baseWebpackConfig, {
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
-      filename: process.env.NODE_ENV === 'testing'
+      filename: process.env.NODE_ENV === 'development'
         ? 'index.html'
         : config.build.index,
       template: 'index.html',

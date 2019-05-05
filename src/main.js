@@ -5,12 +5,11 @@ import Element from 'element-ui'
 import ElementUIPlugin from 'element-ui-plugin'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'element-ui-plugin/lib/theme/index.css'
-import App from './App'
+import App from './App.vue'
 import router from './router'
 
 Vue.use(Element)
 Vue.use(ElementUIPlugin)
-// import $ from 'jquery'
 Vue.config.productionTip = false
 router.beforeEach((to, from, next) => {
   // console.log('beforeEach', this)
@@ -21,7 +20,7 @@ router.beforeResolve((to, from, next) => {
   next()
 })
 
-Vue.filter('filterChinese', function (value) {
+Vue.filter('filterChinese', (value) => {
   if (!value) return ''
   value = value.replace(/[^\u4e00-\u9fa5]+/ig, '')
   // console.log(value)
@@ -32,12 +31,12 @@ Vue.filter('filterChinese', function (value) {
 new Vue({
   el: '#app',
   router,
-	// template: '<App/>',
+  template: '<App/>',
   render (h) {
     return h(App)
   },
   renderError (h, err) {
-    return h('pre', {style: {color: 'red'}}, err.stack)
+    return h('pre', { style: { color: 'red' } }, err.stack)
   },
-  components: {App}
+  components: { App }
 })

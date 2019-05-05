@@ -1,9 +1,11 @@
-
 'use strict'
 // Template version: 1.2.0
 // see http://vuejs-templates.github.io/webpack for documentation.
 
 const path = require('path')
+const cwd = path.resolve(__dirname, '../src')
+const defaultTemplateFile = path.resolve(cwd, 'layout.pug')
+const destDir = ''
 
 module.exports = {
   dev: {
@@ -13,6 +15,14 @@ module.exports = {
     assetsPublicPath: '',
     proxyTable: {},
 
+    // template config
+
+    htmlFileName: {
+      index: path.join(destDir, 'index.html')
+    },
+    htmlTemplate: {
+      index: defaultTemplateFile
+    },
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.HOST, if port is in use, a free one will be determined
@@ -31,7 +41,7 @@ module.exports = {
 
     /**
      * Source Maps
-    */
+     */
 
     // https://webpack.js.org/configuration/devtool/#development
     devtool: 'eval-source-map',
@@ -39,7 +49,7 @@ module.exports = {
     // If you have problems debugging vue-files in devtools,
     // set this to false - it *may* help
     // https://vue-loader.vuejs.org/en/options.html#cachebusting
-    cacheBusting: true,
+    cacheBusting: true
 
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
@@ -60,7 +70,7 @@ module.exports = {
 
     /**
      * SourceMap
-    */
+     */
     productionSourceMap: true,
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
