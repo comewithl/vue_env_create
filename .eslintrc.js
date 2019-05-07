@@ -26,7 +26,7 @@ module.exports = {
 
     'no-restricted-syntax': ['off', 'BinaryExpression[operator=\'in\']'],
     'no-useless-computed-key': 'off',
-
+    'no-unneeded-ternary': 'off',
     'no-undef': 'off',
     'no-use-before-define': 'warn',
     // 禁止扩展原生类型
@@ -60,6 +60,7 @@ module.exports = {
       allowShortCircuit: true,
       allowTernary: true
     }],
+    'no-unused-vars':['warn'],
     // 强制行的最大长度
     'max-len': ['error',
       150, {
@@ -141,7 +142,8 @@ module.exports = {
     'no-useless-escape': 'off',
     'indent': [
       'error',
-      2
+      2,
+      {'ignoreComments': true}
     ],
     'quotes': [
       'error',

@@ -27,7 +27,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     port: 9000,
     // historyApiFallback: true,
     // hot: true,
-    // host: process.env.HOST || config.dev.host,
+    host: process.env.HOST || config.dev.host,
     // port: process.env.PORT || config.dev.port,
     // open: config.dev.autoOpenBrowser,
     // show Error in Browser
